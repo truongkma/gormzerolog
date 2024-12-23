@@ -61,15 +61,15 @@ func (l *Logger) Trace(ctx context.Context, begin time.Time, fc func() (string, 
 	sqlStr := strings.ReplaceAll(sql, "\"", "")
 
 	if err != nil {
-		l.logger.Error().Ctx(ctx).Dur("elapsed", elapsed).Str("sql", sqlStr).Int64("rows", rows).Err(err).Msg("Error SQL")
+		l.logger.Error().Ctx(ctx).CallerSkipFrame(3).Dur("elapsed", elapsed).Str("sql", sqlStr).Int64("rows", rows).Err(err).Msg("Error SQL")
 	} else {
 		if l.config.SlowThreshold != 0 && elapsed >= l.config.SlowThreshold {
-			l.logger.Warn().Ctx(ctx).Dur("elapsed", elapsed).Str("sql", sqlStr).Int64("rows", rows).Msg("Warn SQL")
+			l.logger.Warn().Ctx(ctx).CallerSkipFrame(3).Dur("elapsed", elapsed).Str("sql", sqlStr).Int64("rows", rows).Msg("Warn SQL")
 		} else {
 			if l.logger.GetLevel() != zerolog.TraceLevel && zerolog.GlobalLevel() > zerolog.InfoLevel {
-				l.logger.Log().Ctx(ctx).Dur("elapsed", elapsed).Str("sql", sqlStr).Int64("rows", rows).Msg("Debug SQL")
+				l.logger.Log().Ctx(ctx).CallerSkipFrame(3).Dur("elapsed", elapsed).Str("sql", sqlStr).Int64("rows", rows).Msg("Debug SQL")
 			} else {
-				l.logger.Info().Ctx(ctx).Dur("elapsed", elapsed).Str("sql", sqlStr).Int64("rows", rows).Msg("Trace SQL")
+				l.logger.Info().Ctx(ctx).CallerSkipFrame(3).Dur("elapsed", elapsed).Str("sql", sqlStr).Int64("rows", rows).Msg("Trace SQL")
 			}
 		}
 	}
